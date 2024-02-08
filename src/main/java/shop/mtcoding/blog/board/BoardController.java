@@ -30,7 +30,9 @@ public class BoardController {
     }
 
     @GetMapping("/board/{id}/updateForm")
-    public String updateForm(@PathVariable int id) {
+    public String updateForm(@PathVariable int id, HttpServletRequest request) {
+        Board board = boardRepository.findById(id);
+        request.setAttribute("board",board);
         return "board/updateForm";
     }
 
@@ -47,7 +49,15 @@ public class BoardController {
     }
 
     @PostMapping("/board/{id}/update")
-    public String update(@PathVariable int id){
+    public String update(@PathVariable int id, BoardRequest.UpdateDTO requestDTO, HttpServletRequest request){
+        User sessionUser = (User) session.getAttribute("sessionUser");
+        Board board = boardRepository.findById(id);
+        if (board.getId() != sessionUser.getId()){
+            request.setAttribute("status", 403);
+            request.setAttribute("msg","게시글 수정할 권한이 없습니다.");
+            return "error/40x";
+        }
+        boardRepository.update(requestDTO, id);
         return "redirect:/";
     }
 
