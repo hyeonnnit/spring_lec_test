@@ -9,7 +9,7 @@ public class PagingUtil {
         return currentPage+1==totalPageCount?true:false;
     }
 
-    private static int getTotalPageCount(int totalCount) {
+    public static int getTotalPageCount(int totalCount) {
         int remainCount = totalCount%Constant.PAGING_COUNT;
         int totalPageCount = totalCount / Constant.PAGING_COUNT;
         if (remainCount>0){

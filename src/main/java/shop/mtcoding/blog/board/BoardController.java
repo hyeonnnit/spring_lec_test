@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import shop.mtcoding.blog.core.Constant;
 import shop.mtcoding.blog.core.PagingUtil;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -20,14 +22,23 @@ public class BoardController {
     @GetMapping({"/","/board"})
     public String index(HttpServletRequest request, @RequestParam(defaultValue = "0") int page) {
         List<Board> boardList = boardRepository.findAll(page);
+        List<Integer> pageNumbers = new ArrayList<>();
+        int totalPages = PagingUtil.getTotalPageCount(boardRepository.count());
         request.setAttribute("boardList",boardList);
         int currentPage = page;
-        int nextPage = currentPage+1;
-        int prevPage = currentPage-1;
+//        int nextPage = currentPage+1;
+//        int prevPage = currentPage-1;
+        int nextPage = (currentPage<totalPages-1)? currentPage+1:totalPages-1;
+        int prevPage = (currentPage>0)?currentPage-1 : 0;
+        for (int i = 0; i < totalPages; i++) {
+            pageNumbers.add(i);
+        }
+        boolean first = (currentPage == 0);
+        boolean last = (currentPage == totalPages-1);
+        request.setAttribute("pageNumbers",pageNumbers);
+        request.setAttribute("currentPage",currentPage);
         request.setAttribute("nextPage", nextPage);
         request.setAttribute("prevPage", prevPage);
-        boolean first = PagingUtil.isFirst(currentPage);
-        boolean last = PagingUtil.isLast(currentPage, boardRepository.count());
         request.setAttribute("first",first);
         request.setAttribute("last",last);
         return "index";
