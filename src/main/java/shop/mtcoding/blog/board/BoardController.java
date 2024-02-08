@@ -26,8 +26,6 @@ public class BoardController {
         int totalPages = PagingUtil.getTotalPageCount(boardRepository.count());
         request.setAttribute("boardList",boardList);
         int currentPage = page;
-//        int nextPage = currentPage+1;
-//        int prevPage = currentPage-1;
         int nextPage = (currentPage<totalPages-1)? currentPage+1:totalPages-1;
         int prevPage = (currentPage>0)?currentPage-1 : 0;
         for (int i = 0; i < totalPages; i++) {
