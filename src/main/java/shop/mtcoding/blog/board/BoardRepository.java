@@ -19,9 +19,10 @@ public class BoardRepository {
     }
     @Transactional
     public void save(BoardRequest.SaveDTO requestDTO) {
-        Query query = em.createNativeQuery("insert into board_tb(title,content,created_at)values (?,?,now())");
+        Query query = em.createNativeQuery("insert into board_tb(title,content,author,created_at)values (?,?,?,now())");
         query.setParameter(1,requestDTO.getTitle());
         query.setParameter(2,requestDTO.getContent());
+        query.setParameter(3,requestDTO.getAuthor());
         query.executeUpdate();
     }
 
@@ -37,12 +38,13 @@ public class BoardRepository {
         query.setParameter(1,id);
         query.executeUpdate();
     }
-
+    @Transactional
     public void update(BoardRequest.UpdateDTO requestDTO, int id) {
-        Query query = em.createNativeQuery("update board_tb set title=?, content =? where id =?");
+        Query query = em.createNativeQuery("update board_tb set title=?, content =? ,author=? where id =?");
         query.setParameter(1,requestDTO.getTitle());
         query.setParameter(2,requestDTO.getContent());
-        query.setParameter(3,id);
+        query.setParameter(3,requestDTO.getAuthor());
+        query.setParameter(4,id);
         query.executeUpdate();
     }
 }

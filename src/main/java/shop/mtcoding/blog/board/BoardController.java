@@ -7,8 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import shop.mtcoding.blog.user.User;
+
 
 import java.util.List;
 
@@ -26,6 +25,7 @@ public class BoardController {
 
     @GetMapping("/board/saveForm")
     public String saveForm() {
+
         return "board/saveForm";
     }
 
@@ -50,26 +50,14 @@ public class BoardController {
 
     @PostMapping("/board/{id}/update")
     public String update(@PathVariable int id, BoardRequest.UpdateDTO requestDTO, HttpServletRequest request){
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        Board board = boardRepository.findById(id);
-        if (board.getId() != sessionUser.getId()){
-            request.setAttribute("status", 403);
-            request.setAttribute("msg","게시글 수정할 권한이 없습니다.");
-            return "error/40x";
-        }
+
         boardRepository.update(requestDTO, id);
         return "redirect:/";
     }
 
     @PostMapping("/board/{id}/delete")
-    public String delete(@PathVariable int id, HttpServletRequest request){
-        User sessionUser = (User) session.getAttribute("sessionUser");
-        Board board = boardRepository.findById(id);
-        if (board.getId() != sessionUser.getId()){
-            request.setAttribute("status", 403);
-            request.setAttribute("msg","게시글 삭제할 권한이 없습니다.");
-            return "error/40x";
-        }
+    public String delete(@PathVariable int id){
+
         boardRepository.deleteById(id);
         return "redirect:/";
     }

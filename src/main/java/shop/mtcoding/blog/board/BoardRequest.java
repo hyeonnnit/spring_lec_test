@@ -7,10 +7,12 @@ public class BoardRequest {
     public class SaveDTO {
         private String title;
         private String content;
+        private String author;
     }
     @Data
     public class UpdateDTO{
         private String title;
         private String content;
+        private String author;
     }
 }
